@@ -570,7 +570,7 @@ public class InvertedIndex {
                 result.add(resultDoc);
             }
         }
-        // urutkan hasil cari
+       
         Collections.sort(result);
         return result;
     }
@@ -579,24 +579,22 @@ public class InvertedIndex {
         File[] fileNames = directory.listFiles();
         int i = 1;
         for (File file : fileNames) {
-            // if directory call the same method again
+      
             if (file.isDirectory()) {
                 readDirectory(file);
             } else {
-//                Document doc = new Document();
-//                doc.readFile(i, file);
+
                 try {
-//                    System.out.println("read file " + file.getCanonicalPath());
+
                     try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                         String strLine;
                         String AllContent = "";
-                        // Read lines from the file, returns null when end of stream 
-                        // is reached                    
+                                     
                         while ((strLine = br.readLine()) != null) {
                             AllContent += strLine + " \n";
                         }
                         Document doc = new Document(i, AllContent, file.getName().replace(".txt", ""));
-//                        doc.stemming();
+
                         listOfDocument.add(doc);
                     }
                 } catch (IOException e) {
@@ -627,24 +625,17 @@ public class InvertedIndex {
         }
     }
 
-    /**
-     * @return the cluster
-     */
+
     public ArrayList<Cluster> getListOfCluster() {
         return listOfCluster;
     }
 
-    /**
-     * @param cluster the cluster to set
-     */
+ 
     public void setListOfCluster(ArrayList<Cluster> cluster) {
         this.listOfCluster = cluster;
     }
 
-    /**
-     * Fungsi penyiapan pasting dari seluruh document Asumsi document sudah di
-     * stemming
-     */
+
     public void preClustering() {
         // baca seluruh document
         for (int i = 0; i < listOfDocument.size(); i++) {
@@ -656,12 +647,9 @@ public class InvertedIndex {
         }
     }
 
-    /**
-     * Fungsi untuk clustering
-     */
+
     public void clustering() {
-        // buat arraylistofCluster sejumlah kelompok yang sudah ditentukan
-        // dan tetapkan N document awal sebagai pusat cluster
+
         for (int i = 0; i < NUMBER_OF_DOCUMENT_CLUSTER; i++) {
             Random r=new Random();
             int rd=r.nextInt(listOfDocument.size());
@@ -669,24 +657,15 @@ public class InvertedIndex {
             cluster.setCenter(listOfDocument.get(rd));
             listOfCluster.add(cluster);
         }
-
-        // lalu lakukan penghitungan similarity antara dokumen 
-        // dengan masing-masing center
         for (int i = 0; i < listOfDocument.size(); i++) {
-            // per epoch
             Document doc = listOfDocument.get(i);
-            // hitung similarity
             ArrayList<DocumentToClusterSimilarity> listOfSimilarity = new ArrayList<>();
             for (int j = 0; j < listOfCluster.size(); j++) {
                 double sim = getCosineSimilarity(listOfDocument.get(i).getListOfClusteringPosting(),listOfCluster.get(j).getCenter().getListOfClusteringPosting());
                 DocumentToClusterSimilarity simDoc = new DocumentToClusterSimilarity(sim, listOfCluster.get(j));
                 listOfSimilarity.add(simDoc);
             }
-            // sorting similarity
             Collections.sort(listOfSimilarity);
-            // asumsi sorting descending , similarity terurut dari besar ke kecil
-            // tetapkan document ke cluster dengan similarity terbesar
-            // anda juga bisa tetapkan dengan KNN
             listOfSimilarity.get(listOfCluster.size()-1).getCluster().getMember().add(doc);
         }
     }

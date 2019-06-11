@@ -7,7 +7,7 @@ public class TestCluster3 {
 
     public static void main(String[] args) {
         InvertedIndex index = new InvertedIndex();
-        File file = new File("50 Text Lagu");
+        File file = new File("Lagu");
         index.readDirectory(file);
         index.preClustering();
         index.clustering();
