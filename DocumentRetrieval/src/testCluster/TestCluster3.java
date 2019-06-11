@@ -12,7 +12,7 @@ public class TestCluster3 {
         index.preClustering();
         index.clustering();
         for (int i = 0; i < index.getListOfCluster().size(); i++) {
-            System.out.println("cluster = " + i + ", Pusat Centroid = " + index.getListOfCluster().get(i).getCenter().getId());
+            System.out.println("cluster = " + i + ", Pusat Centroid = " + index.getListOfCluster().get(i).getCenter().getJudul());
             for (int j = 0; j < index.getListOfCluster().get(i).getMember().size(); j++) {
                 System.out.println(index.getListOfCluster().get(i).getMember().get(j).getJudul());
             }
